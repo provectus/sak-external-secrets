@@ -4,7 +4,7 @@ __warning:__ this module only works with ArgoCD
 ## Example
 ``` hcl
 module external_secrets {
-  source         = "github.com/provectus/swiss-army-kube"
+  source         = "github.com/provectus/sak-external-secrets"
   argocd         = module.argocd.state
   cluster_output = module.kubernetes
 }
