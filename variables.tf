@@ -7,7 +7,7 @@ variable "namespace" {
 variable "chart_version" {
   type        = string
   description = "A Helm Chart version"
-  default     = "6.0.0"
+  default     = "8.5.1"
 }
 
 variable "poller_interval" {
