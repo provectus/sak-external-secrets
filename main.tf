@@ -33,13 +33,23 @@ module "application" {
 
   irsa_annotation_field = "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
   cluster_name          = var.cluster_name
-  values = merge({
-    "securityContext.runAsNonRoot"     = true
-    "securityContext.fsGroup"          = 65534
-    "env.AWS_REGION"                   = data.aws_region.current.name
-    "env.AWS_DEFAULT_REGION"           = data.aws_region.current.name
-    "env.POLLER_INTERVAL_MILLISECONDS" = var.poller_interval
-  }, var.chart_values)
+  values                = yamldecode(data.utils_deep_merge_yaml.values.output)
+  argocd                = var.argocd
+}
 
-  argocd = var.argocd
+data "utils_deep_merge_yaml" "values" {
+  input = [
+    yamlencode({
+      securityContext = {
+        runAsNonRoot = true
+        fsGroup      = 65534
+      }
+      env = {
+        AWS_REGION                   = data.aws_region.current.name
+        AWS_DEFAULT_REGION           = data.aws_region.current.name
+        POLLER_INTERVAL_MILLISECONDS = var.poller_interval
+      }
+    }),
+    yamlencode(var.chart_values)
+  ]
 }
