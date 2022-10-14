@@ -1,6 +1,6 @@
 # External Secrets
 
-__warning:__ this module only works with ArgoCD on AWS and is based on <https://github.com/external-secrets/external-secrets>>
+__warning:__ this module only works with ArgoCD on AWS and is based on <https://github.com/external-secrets/external-secrets>
 
 ## Description
 
@@ -104,5 +104,3 @@ kubectl apply -f external_secret_example.yaml
 ## Outputs
 
 No output.
-
-## Step to test scenario
