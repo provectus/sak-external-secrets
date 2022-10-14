@@ -1,13 +1,80 @@
 # External Secrets
-__warning:__ this module only works with ArgoCD
 
-## Example
+__warning:__ this module only works with ArgoCD on AWS and is based on <https://github.com/external-secrets/external-secrets>>
+
+## Description
+
+1. You could add this module to your yaml:
+
 ``` hcl
 module external_secrets {
   source         = "github.com/provectus/sak-external-secrets"
   argocd         = module.argocd.state
-  cluster_output = module.kubernetes
+  cluster_name   = module.kubernetes.cluster_name
+  cluster_oidc_url  = module.kubernetes.cluster_oidc_url
 }
+```
+
+This apply does:
+
+- generates ArgoCd chart, you need to apply
+- generates iam role and policy:
+```"Resource": "arn:aws:secretsmanager:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:secret:${local.cluster_name}*"```
+you need set this in below in example section ```${local.cluster_name}```
+
+2.In kubernetes ```kubectl apply -f external_secret_example.yaml```
+Please change ${local.cluster_name} to your name
+
+```yaml
+apiVersion: external-secrets.io/v1beta1
+kind: SecretStore
+metadata:
+  name: secretstore-sample
+  namespace: kube-system
+spec:
+  provider:
+    aws:
+      service: SecretsManager
+      region: eu-north-1
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: ${local.cluster_name}
+  namespace: kube-system
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: secretstore-sample
+    kind: SecretStore
+  target:
+    name: test-secrets
+    creationPolicy: Owner
+  data:
+  - secretKey: cleanspeak_admin_pass
+    remoteRef:
+      key: ${local.cluster_name}
+```
+
+3. In AWS SecretManager create a secret to use
+
+```bash
+aws secretsmanager create-secret --name swiss-army-kube-sub2zero --description "My test secret created with the CLI." --secret-string "Test_it"
+```
+
+4. Check external secret created:
+```kubectl describe externalsecret.external-secrets.io/swiss-army-kube-sub2zero -n kube-system```
+
+5. Check password you have been created
+```kubectl get secrets test-secrets -n kube-system -o jsonpath="{.data.cleanspeak_admin_pass}" |base64 -D```
+should get get "Test_it"
+
+6. Clean thinks up to delete
+
+```yaml
+aws secretsmanager delete-secret --secret-id swiss-army-kube-sub2zero
+kubectl apply -f external_secret_example.yaml
+
 ```
 
 ## Providers
@@ -37,3 +104,5 @@ module external_secrets {
 ## Outputs
 
 No output.
+
+## Step to test scenario
