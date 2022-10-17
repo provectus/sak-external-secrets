@@ -13,7 +13,7 @@ variable "aws_region" {
 variable "chart_version" {
   type        = string
   description = "A Helm Chart version"
-  default     = "6.0.0"
+  default     = "0.6.0"
 }
 
 variable "poller_interval" {
@@ -35,7 +35,7 @@ variable "cluster_oidc_url" {
 variable "chart_repository" {
   type        = string
   description = "A chart repository"
-  default     = "https://external-secrets.github.io/kubernetes-external-secrets/"
+  default     = "https://charts.external-secrets.io"
 }
 
 variable "chart_values" {
