@@ -10,7 +10,7 @@ __warning:__ this module only works with ArgoCD on AWS and is based on <https://
 module external_secrets {
   source         = "github.com/provectus/sak-external-secrets"
   argocd         = module.argocd.state
-  cluster_name   = module.kubernetes.cluster_name
+  cluster_name   = module.eks.cluster_id
   cluster_oidc_url  = module.kubernetes.cluster_oidc_url
 }
 ```
