@@ -76,6 +76,11 @@ aws secretsmanager delete-secret --secret-id swiss-army-kube-sub2zero
 kubectl apply -f external_secret_example.yaml
 
 ```
+## Requirements
+
+```
+terraform >= 1.1
+ ```
 
 ## Providers
 
