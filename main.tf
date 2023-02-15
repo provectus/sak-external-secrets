@@ -43,7 +43,7 @@ module "iam_assumable_role" {
   role_name                     = "${local.cluster_name}_external-secrets"
   provider_url                  = replace(var.cluster_oidc_url, "https://", "")
   role_policy_arns              = [aws_iam_policy.this.arn]
-  oidc_fully_qualified_subjects = ["system:serviceaccount:${var.namespace}:external-secrets"] //TODO dynamically get service account name and set it here. Currently all service accounts in kube-system will be able to assume this role
+  oidc_fully_qualified_subjects = ["system:serviceaccount:${var.namespace}:external-secrets"] # TODO dynamically get service account name and set it here. Currently all service accounts in kube-system will be able to assume this role
   tags                          = var.tags
 }
 
