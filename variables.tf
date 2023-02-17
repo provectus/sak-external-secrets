@@ -39,29 +39,19 @@ variable "chart_repository" {
 }
 
 variable "chart_values" {
+  type        = string
   default     = ""
   description = "Chart values"
 }
 
-variable "aws_assume_role_arn" {
-  default     = ""
-  description = "A role to assume. If left blank a new role will be created"
-}
-
-variable "secret_manager_full_access" {
-  default     = false
-  description = <<EOT
-  By setting this to true, the assumable role that is created for the Service Account attached to the External-Secrets application will have full access to all AWS Sercret Manager keys prefixed the name of the cluster. 
-  We recommend setting this to false and instead creating roles with fine-granular access policies for each ExternalSecret you define, and allow the role created here to assume those roles.
-  EOT
-}
-
 variable "chart_parameters" {
+  type        = list
   default     = []
   description = "A list of parameters that will override defaults"
 }
 
 variable "chart_parameters_as_string" {
+  type        = list
   default     = []
   description = "A list of parameters that will override defaults"
 }
@@ -72,11 +62,6 @@ variable "tags" {
   description = "A tags for attaching to new created AWS resources"
 }
 
-variable "allowed_secrets_prefix" {
-  type        = string
-  description = "Prefix of for secrets we should be able to access from the external-secrets app?"
-  default     = "/eks/"
-}
 variable "argocd" {
   type        = map(string)
   description = "A set of values for enabling deployment through ArgoCD"
